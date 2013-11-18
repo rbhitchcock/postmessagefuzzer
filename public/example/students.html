@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>Students</title>
+    <script>
+      function addStudent(event) {
+        var el = document.getElementById('students');
+        // use a safe function
+        el.textContent = event.data;
+      }
+      window.addEventListener("message", addStudent, false);
+    </script>
+  </head>
+  <body>
+    <h2>Students</h2>
+    <div id="students"></div>
+  </body>
+</html>

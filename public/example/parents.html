@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>Parents</title>
+    <script>
+      function addParent(event) {
+        // verify sender
+        if (event.orgin !== "http://safe.com") return;
+        var el = document.getElementById('parents');
+        var existingHTML = el.innerHTML;
+        // still should be sanitizing!
+        el.innerHTML = existingHTML + '<br>' + event.data;
+      }
+      window.addEventListener("message", addParent, false);
+    </script>
+  </head>
+  <body>
+    <h2>Parents</h2>
+    <div id="parents"></div>
+  </body>
+</html>

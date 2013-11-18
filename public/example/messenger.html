@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>Messenger</title>
+    <script>
+      function receiveMessage(event) {
+        document.getElementById('messages').innerHTML = event.data;
+      }
+      window.addEventListener("message", receiveMessage, false);
+    </script>
+  </head>
+  <body>
+    <h2>Messenger</h2>
+    <div id="messages"></div>
+  </body>
+</html>

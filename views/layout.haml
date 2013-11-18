@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    %title postMessage Fuzzer
+    %link{rel: "stylesheet", href: "/lib/css/bootstrap.min.css"}
+    %link{rel: "stylesheet", href: "/app/css/app.css"}
+    %script{type: "text/javascript", src: "/lib/js/jquery-2.0.3.min.js"}
+  %body
+    %div{class: "navbar navbar-inverse navbar-fixed-top", role: "navigation"}
+      .container
+        .navbar-header
+          %a{class: "navbar-brand", href: "#"} postMessage Fuzzer
+    .container#fuzzer-content
+      = yield
