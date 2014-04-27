@@ -46,7 +46,7 @@
 
   $('iframe#target').load(function() {
     var frame = window.frames[0];
-    if (typeof(frame) !== "undefined") {
+    if (typeof(frame) !== "undefined" && frame.location.href !== "about:blank") {
       frame.postMessage('<img src="a" onerror="'+payload+'">', target);
       setTimeout('loadFrame(locations[index++])', 2000);
     }
