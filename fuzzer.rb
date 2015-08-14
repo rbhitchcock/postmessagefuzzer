@@ -4,8 +4,18 @@ require 'sinatra'
 require 'haml'
 require 'sinatra/json'
 
+set :protection, :except => :frame_options
+
 get '/' do
   haml :index
+end
+
+get '/manual' do
+  haml :manual
+end
+
+get '/sandbox' do
+  haml :sandbox
 end
 
 post '/spider' do
